@@ -1,0 +1,375 @@
+<mat-card>
+    <mat-card-title align="center">Sign Up Form</mat-card-title>
+    <form [formGroup]="signUpForm" (ngSubmit)="onSignUp()">
+        <div class="row">
+            <div class="col-md-6">
+                <!-- fname -->
+                <div class="inputControl">
+                    <i class="fa-solid fa-circle-user"></i>
+                    <mat-form-field>
+                        <mat-label>Enter First Name</mat-label>
+                        <input type="text" matInput formControlName="fname" placeholder="Ex. John">
+                        <mat-error>
+                            <div *ngIf="controls['fname'].touched && controls['fname'].hasError('required')">First name
+                                is required field!!!</div>
+                            <div *ngIf="controls['fname'].dirty && controls['fname'].hasError('pattern')">Numeric and
+                                Special characters are not allowed!!!</div>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <!-- lname -->
+                <div class="inputControl">
+                    <mat-form-field>
+                        <mat-label>Enter Last Name</mat-label>
+                        <input type="text" matInput formControlName="lname" placeholder="Ex. Doe">
+                        <mat-error>
+                            <div *ngIf="controls['lname'].touched && controls['lname'].hasError('required')">Last name
+                                is required field!!!</div>
+                            <div *ngIf="controls['lname'].dirty && controls['lname'].hasError('pattern')">Numeric and
+                                Special characters are not allowed!!!</div>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <!-- username -->
+            <div class="col-md-12">
+                <div class="inputControl">
+                    <i class="fa-solid fa-circle-user"></i>
+                    <mat-form-field>
+                        <mat-label>Enter Username</mat-label>
+                        <input type="text" matInput formControlName="username" placeholder="iamjohndoe">
+                        <mat-error>
+                            <div *ngIf="controls['username'].touched && controls['username'].hasError('required')">
+                                Username
+                                is required field!!!</div>
+                            <div *ngIf="controls['username'].dirty">
+                                <span *ngIf="controls['username'].hasError('pattern')">Numeric and Special characters
+                                    not allowed!!! <br></span>
+                                <span *ngIf="controls['username'].hasError('minlength')">
+                                    Minimum length of Username should be
+                                    {{controls['username'].errors?.['minlength'].requiredLength}}. Current length is
+                                    {{controls['username'].errors?.['minlength'].actualLength}}.
+                                </span>
+                                <span *ngIf="controls['username'].hasError('maxlength')">
+                                    Maximum length of Username should be
+                                    {{controls['username'].errors?.['maxlength'].requiredLength}}. Current length is
+                                    {{controls['username'].errors?.['maxlength'].actualLength}}.
+                                </span>
+                            </div>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <!-- email -->
+            <div class="col-md-12">
+                <div class="inputControl">
+                    <i class="fa-solid fa-at"></i>
+                    <mat-form-field>
+                        <mat-label>Enter Email</mat-label>
+                        <input type="text" matInput formControlName="email" placeholder="Ex. abc@gmail.com">
+                        <mat-error>
+                            <div *ngIf="controls['email'].touched && controls['email'].hasError('required')">Email is
+                                required field!!!</div>
+                            <div *ngIf="controls['email'].dirty && controls['email'].hasError('pattern')">Invalid email
+                                pattern!!!</div>
+
+                            <div *ngIf="controls['email'].hasError('emailExist')">
+                                {{controls['email'].errors?.['emailExist']}}
+                            </div>
+                        </mat-error>
+                        <div class="emailErrorMsg text-danger">
+                            <div class="pendingStatusMsg" *ngIf="controls['email'].pending">
+                                <div class="spinner-border mr-1" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                                <span>Checking Availability...</span>
+                            </div>
+                            <div class="text-success" *ngIf="controls['email'].valid && controls['email'].dirty ">
+                                This Email is available to use.
+                            </div>
+                        </div>
+                    </mat-form-field>
+
+                </div>
+            </div>
+            <!-- empId -->
+            <div class="col-md-12">
+                <div class="inputControl">
+                    <i class="fa-regular fa-id-badge"></i>
+                    <mat-form-field>
+                        <mat-label>Enter Employee ID</mat-label>
+                        <input type="text" matInput formControlName="empId" placeholder="Ex. E123">
+                        <mat-error>
+                            <div *ngIf="controls['empId'].touched && controls['empId'].hasError('required')">
+                                Employee Id
+                                is required field!!!</div>
+                            <div *ngIf="controls['empId'].dirty && controls['empId'].hasError('invalidEmpId')">
+                                {{controls['empId'].errors?.['invalidEmpId']}}
+                            </div>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <!-- gender -->
+            <div class="col-md-12">
+                <div class="inputControl gender">
+                    <i class="fa-solid fa-venus-mars"></i>
+                    <h4 class="mb-0">Select Gender*
+                        <span class="text-danger" *ngIf="controls['gender'].hasError('required')">(Please specify
+                            gender.)</span>
+                    </h4>
+                </div>
+                <mat-radio-group formControlName="gender">
+                    <mat-radio-button *ngFor="let gender of genderArr" class="m-2"
+                        [value]="gender">{{gender}}</mat-radio-button>
+                </mat-radio-group>
+            </div>
+            <!-- skills -->
+            <div class="col-md-12">
+                <div formArrayName="skills">
+                    <div class="inputControl skills">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        <h4 class="mb-0">Add Skills*
+                            <span class="text-danger" *ngIf="skillsFormArray.length>=5">(Can not add more than 5
+                                skills!!!)</span>
+
+                        </h4>
+                    </div>
+                    <mat-chip-list class="my-2">
+                        <mat-chip *ngFor="let skill of skillsFormArray.controls; let i=index">{{skill.value}}
+                            <mat-icon matChipRemove (click)="onRemove(i)">cancel</mat-icon>
+                        </mat-chip>
+                    </mat-chip-list>
+                    <mat-form-field class="my-2" appearance="fill">
+                        <input #skillInput type="text" matInput placeholder="Ex. HTML"
+                            [disabled]="skillsFormArray.length==5">
+                        <mat-icon class="mx-3 addSkillIcon" (click)="onAddSkill(skillInput)"
+                            matSuffix>add_circle</mat-icon>
+                    </mat-form-field>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="row address">
+                <!-- current Address -->
+                <div class="col-md-6" formGroupName="currentAddress">
+                    <h4>Current Address*</h4>
+                    <!-- country -->
+                    <div class="inputControl">
+                        <i class="fa-solid fa-globe"></i>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Select Country</mat-label>
+                            <mat-select formControlName="country">
+                                <mat-option *ngFor="let country of countryArr"
+                                    [value]="country.Country">{{country.Country}}</mat-option>
+                            </mat-select>
+                            <mat-error
+                                *ngIf="currentAddControl['country'].touched && currentAddControl['country'].hasError('required')">
+                                Country is required field!!!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <!-- state -->
+                    <div class="inputControl">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Enter State</mat-label>
+                            <input type="text" matInput formControlName="state">
+                            <mat-error>
+                                <div
+                                    *ngIf="currentAddControl['state'].touched && currentAddControl['state'].hasError('required')">
+                                    State field is required!!!</div>
+                                <div
+                                    *ngIf="currentAddControl['state'].dirty && currentAddControl['state'].hasError('pattern')">
+                                    Numeric and Special characters not allowed!!!</div>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <!-- city -->
+                    <div class="inputControl">
+                        <i class="fa-solid fa-location-crosshairs"></i>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Enter City</mat-label>
+                            <input type="text" matInput formControlName="city">
+                            <mat-error>
+                                <div
+                                    *ngIf="currentAddControl['city'].touched && currentAddControl['city'].hasError('required')">
+                                    City field is required!!!</div>
+                                <div
+                                    *ngIf="currentAddControl['city'].dirty && currentAddControl['city'].hasError('pattern')">
+                                    Numeric and Special characters not allowed!!!</div>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <!-- zipcode -->
+                    <div class="inputControl">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Enter Zipcode</mat-label>
+                            <input type="text" matInput formControlName="zipcode">
+                            <mat-error>
+                                <div
+                                    *ngIf="currentAddControl['zipcode'].touched && currentAddControl['zipcode'].hasError('required')">
+                                    Zipcode field is required!!!</div>
+                                <div *ngIf="currentAddControl['zipcode'].dirty">
+                                    <span *ngIf="currentAddControl['zipcode'].hasError('pattern')">
+                                        Alphabetical and Special characters not allowed!!! <br>
+                                    </span>
+                                    <span *ngIf="currentAddControl['zipcode'].hasError('minlength')">
+                                        Minimum length of Zipcode should be
+                                        {{currentAddControl['zipcode'].errors?.['minlength'].requiredLength}}. Current
+                                        length is
+                                        {{currentAddControl['zipcode'].errors?.['minlength'].actualLength}}.
+                                    </span>
+                                    <span *ngIf="currentAddControl['zipcode'].hasError('maxlength')">
+                                        Maximum length of Zipcode should be
+                                        {{currentAddControl['zipcode'].errors?.['maxlength'].requiredLength}}. Current
+                                        length is
+                                        {{currentAddControl['zipcode'].errors?.['maxlength'].actualLength}}.
+                                    </span>
+                                </div>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <!-- permanent address -->
+                <div class="col-md-6" formGroupName="permanentAddress">
+                    <h4>Permanent Address*</h4>
+                    <!-- country -->
+                    <div class="inputControl">
+                        <i class="fa-solid fa-globe"></i>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Select Country</mat-label>
+                            <mat-select formControlName="country">
+                                <mat-option *ngFor="let country of countryArr"
+                                    [value]="country.Country">{{country.Country}}</mat-option>
+                            </mat-select>
+                            <mat-error
+                                *ngIf="permanentAddControl['country'].touched && permanentAddControl['country'].hasError('required')">
+                                Country is required field!!!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <!-- state -->
+                    <div class="inputControl">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Enter State</mat-label>
+                            <input type="text" matInput formControlName="state">
+                            <mat-error>
+                                <div
+                                    *ngIf="permanentAddControl['state'].touched && permanentAddControl['state'].hasError('required')">
+                                    State field is required!!!</div>
+                                <div
+                                    *ngIf="permanentAddControl['state'].dirty && permanentAddControl['state'].hasError('pattern')">
+                                    Numeric and Special characters not allowed!!!</div>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <!-- city -->
+                    <div class="inputControl">
+                        <i class="fa-solid fa-location-crosshairs"></i>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Enter City</mat-label>
+                            <input type="text" matInput formControlName="city">
+                            <mat-error>
+                                <div
+                                    *ngIf="permanentAddControl['city'].touched && permanentAddControl['city'].hasError('required')">
+                                    City field is required!!!</div>
+                                <div
+                                    *ngIf="permanentAddControl['city'].dirty && permanentAddControl['city'].hasError('pattern')">
+                                    Numeric and Special characters not allowed!!!</div>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <!-- zipcode -->
+                    <div class="inputControl">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Enter Zipcode</mat-label>
+                            <input type="text" matInput formControlName="zipcode">
+                            <mat-error>
+                                <div
+                                    *ngIf="permanentAddControl['zipcode'].touched && permanentAddControl['zipcode'].hasError('required')">
+                                    Zipcode field is required!!!</div>
+                                <div *ngIf="permanentAddControl['zipcode'].dirty">
+                                    <span *ngIf="permanentAddControl['zipcode'].hasError('pattern')">
+                                        Alphabetical and Special characters not allowed!!! <br>
+                                    </span>
+                                    <span *ngIf="permanentAddControl['zipcode'].hasError('minlength')">
+                                        Minimum length of Zipcode should be
+                                        {{permanentAddControl['zipcode'].errors?.['minlength'].requiredLength}}. Current
+                                        length is
+                                        {{permanentAddControl['zipcode'].errors?.['minlength'].actualLength}}.
+                                    </span>
+                                    <span *ngIf="permanentAddControl['zipcode'].hasError('maxlength')">
+                                        Maximum length of Zipcode should be
+                                        {{permanentAddControl['zipcode'].errors?.['maxlength'].requiredLength}}. Current
+                                        length is
+                                        {{permanentAddControl['zipcode'].errors?.['maxlength'].actualLength}}.
+                                    </span>
+                                </div>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 mt-5">
+            <mat-checkbox formControlName="isAddressSame">Permanent address and Current address are same.</mat-checkbox>
+        </div>
+        <div class="col-md-12">
+            <div class="inputControl">
+                <i class="fa-solid fa-lock"></i>
+                <mat-form-field>
+                    <mat-label>Enter Password</mat-label>
+                    <input matInput [type]="passwordType?'text':'password'" formControlName="password">
+                    <mat-icon matSuffix (click)="togglePassVisibility()">
+                        {{passwordType? 'visibility':'visibility_off'}}
+                    </mat-icon>
+                    <mat-error>
+                        <div *ngIf="controls['password'].touched && controls['password'].hasError('required')">
+                            Password is required field!!!
+                        </div>
+                        <div *ngIf="controls['password'].dirty && controls['password'].hasError('pattern')">
+                            Password must be at least 8 characters long and include at least one lowercase letter,
+                            one uppercase letter, one digit and one special character.
+                        </div>
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="inputControl">
+                <i class="fa-solid fa-lock"></i>
+                <mat-form-field>
+                    <mat-label>Enter Password</mat-label>
+                    <input matInput [type]="ConfirmPasswordType?'text':'password'" formControlName="confirmPassword">
+                    <mat-icon matSuffix (click)="toggleConfirmPassVisibility()">
+                        {{ConfirmPasswordType? 'visibility':'visibility_off'}}
+                    </mat-icon>
+                    <mat-error>
+                        <div
+                            *ngIf="controls['confirmPassword'].touched && controls['confirmPassword'].hasError('required')">
+                            Confirm Password is required field!!!
+                        </div>
+                        <div *ngIf="controls['confirmPassword'].errors?.['invalid']">
+                            Password do not match.
+                        </div>
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <button class="submitBtn mt-5" [disabled]="signUpForm.invalid"
+        type="submit" mat-raised-button >Sign Up</button>
+
+
+    </form>
+</mat-card>

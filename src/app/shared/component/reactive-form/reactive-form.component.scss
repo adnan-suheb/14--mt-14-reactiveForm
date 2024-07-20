@@ -1,0 +1,60 @@
+mat-form-field {
+    width: 100%;
+}
+
+mat-icon {
+    cursor: pointer;
+}
+
+.inputControl {
+    margin: 8px 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    i {
+        margin-right: 10px;
+        font-size: 1rem;
+    }
+}
+
+.emailErrorMsg {
+    position: absolute;
+    top: 100%;
+    font-size: 11px;
+    margin-top: 5px;
+
+    .spinner-border {
+        width: 11px;
+        height: 11px;
+    }
+
+    .pendingStatusMsg {
+        display: flex;
+        align-items: center;
+    }
+}
+
+.inputControl.gender,
+.inputControl.skills {
+    justify-content: start;
+}
+
+.address {
+    mat-form-field {
+        width: 90%;
+    }
+}
+
+.isAddressSame {
+    margin-top: 35px 0;
+}
+
+.submitBtn {
+    width: 100%;
+    background-color: #000;
+    color: #fff;
+    font-size: 1rem;
+    padding: 0.5rem;
+}
